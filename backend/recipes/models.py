@@ -1,4 +1,4 @@
-"""Модели приложенеия Рецепты."""
+"""Модели приложения Рецепты."""
 
 from django.contrib.auth import get_user_model
 from django.core.validators import MinValueValidator
