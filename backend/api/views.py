@@ -9,4 +9,5 @@ class IngredientViewSet(ReadOnlyModelViewSet):
     """Вьюсет ингредиента."""
 
     queryset = Ingredient.objects.all()
+    pagination_class = None
     serializer_class = IngredientSerialiser
