@@ -6,6 +6,30 @@ from django.db import models
 User = get_user_model()
 
 
+class Ingredient(models.Model):
+    """Модель ингредиента."""
+
+    name = models.CharField(
+        max_length=200,
+        verbose_name='Название'
+    )
+    measurement_unit = models.CharField(
+        max_length=200,
+        verbose_name='Единица измерения'
+    )
+
+    def __str__(self):
+        """Строковое представление модели ингредиента."""
+        return self.name
+
+    class Meta:
+        """Метаданные модели ингредиента."""
+
+        verbose_name = 'Ингредиент'
+        verbose_name_plural = 'Ингредиенты'
+        ordering = ['name']
+
+
 class Tag(models.Model):
     """Модель тега."""
 
@@ -30,30 +54,6 @@ class Tag(models.Model):
         verbose_name = 'Тег'
         verbose_name_plural = 'Теги'
         ordering = ['-id']
-
-
-class Ingredient(models.Model):
-    """Модель ингредиента."""
-
-    name = models.CharField(
-        max_length=200,
-        verbose_name='Название'
-    )
-    measurement_unit = models.CharField(
-        max_length=200,
-        verbose_name='Единица измерения'
-    )
-
-    def __str__(self):
-        """Строковое представление модели ингредиента."""
-        return self.name
-
-    class Meta:
-        """Метаданные модели ингредиента."""
-
-        verbose_name = 'Ингредиент'
-        verbose_name_plural = 'Ингредиенты'
-        ordering = ['name']
 
 
 class Recipe(models.Model):
