@@ -1,4 +1,5 @@
 """Вьюсеты приложения API."""
+from rest_framework.filters import SearchFilter
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
 from recipes.models import Ingredient, Tag, Recipe
@@ -9,16 +10,18 @@ class IngredientViewSet(ReadOnlyModelViewSet):
     """Вьюсет ингредиента."""
 
     queryset = Ingredient.objects.all()
-    pagination_class = None
     serializer_class = IngredientSerialiser
+    filter_backends = (SearchFilter,)
+    search_fields = ('^name',)
+    pagination_class = None
 
 
 class TagViewSet(ReadOnlyModelViewSet):
     """Вьюсет тега."""
 
     queryset = Tag.objects.all()
-    pagination_class = None
     serializer_class = TagSerialiser
+    pagination_class = None
 
 
 class RecipeViewSet(ModelViewSet):
