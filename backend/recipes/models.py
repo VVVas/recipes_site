@@ -1,6 +1,6 @@
 """Модели приложения Рецепты."""
 from django.contrib.auth import get_user_model
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, RegexValidator
 from django.db import models
 
 User = get_user_model()
@@ -40,7 +40,10 @@ class Tag(models.Model):
     color = models.CharField(
         max_length=7,
         blank=True,
-        verbose_name='Цвет'
+        verbose_name='Цвет',
+        validators=(
+            RegexValidator(r'^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$', 'Введите код цвета в шестнадцатеричной системе.')
+        ),
     )
     slug = models.SlugField(
         max_length=200,
@@ -48,6 +51,9 @@ class Tag(models.Model):
         null=True,
         unique=True,
         verbose_name='Слаг',
+        validators=(
+            RegexValidator(r'^[-a-zA-Z0-9_]+$', 'Разрешены только символы латинского алфавита, цифры и подчёркивание.')
+        ),
     )
 
     def __str__(self):
