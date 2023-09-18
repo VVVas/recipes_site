@@ -44,7 +44,7 @@ class Tag(models.Model):
         validators=[
             RegexValidator(
                 regex='^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$',
-                message='Введите код цвета в шестнадцатеричной системе.',
+                message='Введите код цвета в шестнадцатеричной системе.'
             )
         ],
     )
@@ -57,7 +57,7 @@ class Tag(models.Model):
         validators=[
             RegexValidator(
                 regex='^[-a-zA-Z0-9_]+$',
-                message='Вводите латинские буквы, цифры, подчёркивание и дефис.',
+                message='Только латинские буквы, цифры, подчёркивание и дефис.'
             )
         ],
     )
@@ -74,9 +74,52 @@ class Tag(models.Model):
         ordering = ['-id']
 
 
+class IngredientAmount(models.Model):
+    """Модель количества ингредиента."""
+
+    ingredient = models.ForeignKey(
+        Ingredient,
+        on_delete=models.CASCADE,
+        related_name='ingredientamount',
+        verbose_name='Ингредиент'
+    )
+    amount = models.PositiveSmallIntegerField(
+        verbose_name='Количество',
+        validators=[
+            MinValueValidator(1, 'Минимум 1'),
+        ],
+    )
+
+    def __str__(self):
+        """Строковое представление модели количества ингредиента."""
+        return self.ingredient
+
+    class Meta:
+        """Метаданные модели количества ингредиента."""
+
+        verbose_name = 'Количество ингредиента'
+        verbose_name_plural = 'Количества ингредиентов'
+        ordering = ['ingredient']
+
+
 class Recipe(models.Model):
     """Модель рецепта."""
 
+    tags = models.ManyToManyField(
+        Tag,
+        verbose_name='Тег'
+    )
+    author = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='recipe',
+        verbose_name='Автор'
+    )
+    ingredients = models.ManyToManyField(
+        IngredientAmount,
+        related_name='recipe',
+        verbose_name='Ингредиенты'
+    )
     name = models.CharField(
         max_length=200,
         verbose_name='Название'
@@ -88,18 +131,8 @@ class Recipe(models.Model):
             MinValueValidator(1, 'Минимальное время 1 минута'),
         ],
     )
-    author = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name='recipes',
-        verbose_name='Автор'
-    )
-    tags = models.ManyToManyField(
-        Tag,
-        verbose_name='Тег'
-    )
+
     # image =
-    # ingredients = как достижения у котиков: таблица с названием и мерой и таблица с ид и сколько
     # is_favorited =
     # is_in_shopping_cart =
 
