@@ -4,7 +4,7 @@ from rest_framework import serializers
 from recipes.models import Ingredient, Tag, Recipe
 
 
-class IngredientSerialiser(serializers.ModelSerializer):
+class IngredientSerializer(serializers.ModelSerializer):
     """Сериалайзер ингредиента."""
 
     class Meta:
@@ -16,7 +16,7 @@ class IngredientSerialiser(serializers.ModelSerializer):
         )
 
 
-class TagSerialiser(serializers.ModelSerializer):
+class TagSerializer(serializers.ModelSerializer):
     """Сериалайзер тега."""
 
     class Meta:
@@ -28,8 +28,10 @@ class TagSerialiser(serializers.ModelSerializer):
         )
 
 
-class RecipeSerialiser(serializers.ModelSerializer):
+class RecipeSerializer(serializers.ModelSerializer):
     """Сериалайзер тега."""
+
+    tags = TagSerializer(many=True, read_only=True)
 
     class Meta:
         """Метаданные сериалайзера тега."""
