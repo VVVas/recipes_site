@@ -1,8 +1,8 @@
 """Вьюсеты приложения API."""
-from rest_framework.viewsets import ReadOnlyModelViewSet
+from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
-from recipes.models import Ingredient, Tag
-from .serializers import IngredientSerialiser, TagSerialiser
+from recipes.models import Ingredient, Tag, Recipe
+from .serializers import IngredientSerialiser, TagSerialiser, RecipeSerialiser
 
 
 class IngredientViewSet(ReadOnlyModelViewSet):
@@ -19,3 +19,10 @@ class TagViewSet(ReadOnlyModelViewSet):
     queryset = Tag.objects.all()
     pagination_class = None
     serializer_class = TagSerialiser
+
+
+class RecipeViewSet(ModelViewSet):
+    """Вьюсет рецепта."""
+
+    queryset = Recipe.objects.all()
+    serializer_class = RecipeSerialiser
