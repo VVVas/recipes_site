@@ -37,12 +37,18 @@ class Tag(models.Model):
         max_length=200,
         verbose_name='Название'
     )
-    slug = models.SlugField(
-        max_length=50,
-        verbose_name='Слаг',
-        unique=True
+    color = models.CharField(
+        max_length=7,
+        blank=True,
+        verbose_name='Цвет'
     )
-    # color =
+    slug = models.SlugField(
+        max_length=200,
+        blank=True,
+        null=True,
+        unique=True,
+        verbose_name='Слаг',
+    )
 
     def __str__(self):
         """Строковое представление модели тега."""
