@@ -41,9 +41,12 @@ class Tag(models.Model):
         max_length=7,
         blank=True,
         verbose_name='Цвет',
-        validators=(
-            RegexValidator(r'^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$', 'Введите код цвета в шестнадцатеричной системе.')
-        ),
+        validators=[
+            RegexValidator(
+                regex='^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$',
+                message='Введите код цвета в шестнадцатеричной системе.',
+            )
+        ],
     )
     slug = models.SlugField(
         max_length=200,
@@ -51,9 +54,12 @@ class Tag(models.Model):
         null=True,
         unique=True,
         verbose_name='Слаг',
-        validators=(
-            RegexValidator(r'^[-a-zA-Z0-9_]+$', 'Разрешены только символы латинского алфавита, цифры и подчёркивание.')
-        ),
+        validators=[
+            RegexValidator(
+                regex='^[-a-zA-Z0-9_]+$',
+                message='Вводите латинские буквы, цифры, подчёркивание и дефис.',
+            )
+        ],
     )
 
     def __str__(self):
@@ -78,9 +84,9 @@ class Recipe(models.Model):
     text = models.TextField(verbose_name='Описание')
     cooking_time = models.PositiveSmallIntegerField(
         verbose_name='Время приготовления (в минутах)',
-        validators=(
+        validators=[
             MinValueValidator(1, 'Минимальное время 1 минута'),
-        ),
+        ],
     )
     author = models.ForeignKey(
         User,
