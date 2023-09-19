@@ -20,7 +20,7 @@ class Ingredient(models.Model):
 
     def __str__(self):
         """Строковое представление модели ингредиента."""
-        return self.name
+        return f'{self.name}, {self.measurement_unit}'
 
     class Meta:
         """Метаданные модели ингредиента."""
@@ -92,7 +92,8 @@ class IngredientAmount(models.Model):
 
     def __str__(self):
         """Строковое представление модели количества ингредиента."""
-        return self.ingredient
+        return (f'{self.ingredient.name}, '
+                f'{self.amount} {self.ingredient.measurement_unit}')
 
     class Meta:
         """Метаданные модели количества ингредиента."""
@@ -138,7 +139,7 @@ class Recipe(models.Model):
 
     def __str__(self):
         """Строковое представление модели Рецепта."""
-        return self.name
+        return f'{self.name}, {self.author}'
 
     class Meta:
         """Метаданные модели Рецепта."""

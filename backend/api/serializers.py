@@ -1,7 +1,7 @@
 """Сериалайзеры приложения API."""
 from rest_framework import serializers
 
-from recipes.models import Ingredient, Tag, Recipe
+from recipes.models import Ingredient, Tag, IngredientAmount, Recipe
 
 
 class IngredientSerializer(serializers.ModelSerializer):
@@ -28,15 +28,31 @@ class TagSerializer(serializers.ModelSerializer):
         )
 
 
+class IngredientAmountSerializer(serializers.ModelSerializer):
+    """Сериалайзер количества ингредиента."""
+
+    ingredient = IngredientSerializer(read_only=True)
+
+    class Meta:
+        """Метаданные сериалайзера количества ингредиента."""
+
+        model = IngredientAmount
+        fields = (
+            'ingredient', 'amount',
+        )
+
+
 class RecipeSerializer(serializers.ModelSerializer):
     """Сериалайзер тега."""
 
     tags = TagSerializer(many=True, read_only=True)
+    ingredients = IngredientAmountSerializer(many=True, read_only=True)
 
     class Meta:
         """Метаданные сериалайзера тега."""
 
         model = Recipe
         fields = (
-            'id', 'tags', 'author', 'name', 'text', 'cooking_time',
+            'id', 'tags', 'author', 'ingredients', 'name', 'text',
+            'cooking_time',
         )

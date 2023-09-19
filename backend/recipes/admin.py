@@ -1,7 +1,7 @@
 """Настройка отображения моделей приложения Рецепты в админке."""
 from django.contrib import admin
 
-from .models import Ingredient, Tag, Recipe
+from .models import Ingredient, Tag, IngredientAmount, Recipe
 
 
 class IngredientAdmin(admin.ModelAdmin):
@@ -20,6 +20,14 @@ class TagAdmin(admin.ModelAdmin):
     empty_value_display = '-пусто-'
 
 
+class IngredientAmountAdmin(admin.ModelAdmin):
+    """Отображение количества ингредиента в админке."""
+
+    list_display = ('pk', 'ingredient', 'amount',)
+    search_fields = ('ingredient',)
+    empty_value_display = '-пусто-'
+
+
 class RecipeAdmin(admin.ModelAdmin):
     """Отображение тега в админке."""
 
@@ -30,4 +38,5 @@ class RecipeAdmin(admin.ModelAdmin):
 
 admin.site.register(Ingredient, IngredientAdmin)
 admin.site.register(Tag, TagAdmin)
+admin.site.register(IngredientAmount, IngredientAmountAdmin)
 admin.site.register(Recipe, RecipeAdmin)
