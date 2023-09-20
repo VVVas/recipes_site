@@ -135,6 +135,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # AUTH_USER_MODEL = 'users.User'
 
 
+# Путь и имя csv файла ингредиентов для загрузки с помощью команды управления
+# python manage.py load_ingredients
+# В одной строке один ингредиент и его мера измерения разделённые запятой.
+INGREDIENTS_CSV = BASE_DIR / '../data/ingredients.csv'
+
+
 # Django REST framework settings
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
