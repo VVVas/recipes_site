@@ -118,3 +118,60 @@ jobs:
         to: ${{ secrets.TELEGRAM_TO }}
         token: ${{ secrets.TELEGRAM_TOKEN }}
         message: Образы бэка, фронта и гейта Фудграма успешно отправлены на DockerHub после коммита ${{ github.sha }} разработчика ${{ github.actor }}
+
+  deploy:
+    name: Deploy
+    if: github.ref_name == 'main'
+    runs-on: ubuntu-latest
+    needs: 
+      - build_backend_and_push_to_docker_hub
+      - build_frontend_and_push_to_docker_hub
+      - build_gateway_and_push_to_docker_hub
+      - send_message_after_push_to_docker_hub
+
+    steps:
+    - name: Check out the repo
+      uses: actions/checkout@v3
+    - name: Copy docker-compose.production.yml via ssh
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USER }}
+        key: ${{ secrets.SSH_KEY }}
+        passphrase: ${{ secrets.SSH_PASSPHRASE }}
+        source: "infra/docker-compose.production.yml"
+        target: "foodgram"
+    - name: Executing remote ssh commands to deploy
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USER }}
+        key: ${{ secrets.SSH_KEY }}
+        passphrase: ${{ secrets.SSH_PASSPHRASE }}
+        script: |
+          cd foodgram
+          sudo docker compose -f docker-compose.production.yml pull
+          sudo docker compose -f docker-compose.production.yml down
+          sudo docker compose -f docker-compose.production.yml up -d
+          sudo docker compose -f docker-compose.production.yml exec backend python manage.py migrate
+          # Загрузка обязательного списка ингредиентов.
+          sudo docker compose -f docker-compose.production.yml exec backend python manage.py load_ingredients
+          # Загрузка 4 базовых тегов при необходимости.
+          # sudo docker compose -f docker-compose.production.yml exec backend python manage.py load_tags
+          sudo docker compose -f docker-compose.production.yml exec backend python manage.py collectstatic --no-input
+          # Очистка от старых образов докера (когда их много иногда почему-то используются они вместо нужных).
+          sudo docker image rm $(sudo docker image ls -f "dangling=true" -q)
+
+  send_message_after_deploy:
+    name: Message after deploy
+    runs-on: ubuntu-latest
+    needs: deploy
+
+    steps:
+    - name: Send message
+      uses: appleboy/telegram-action@master
+      with:
+        to: ${{ secrets.TELEGRAM_TO }}
+        token: ${{ secrets.TELEGRAM_TOKEN }}
+        message: Деплой Фудграма успешно выполнен после коммита ${{ github.sha }} разработчика ${{ github.actor }}
+
