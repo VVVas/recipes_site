@@ -64,9 +64,9 @@ class CustomUserViewSet(UserViewSet):
 
         if user == author:
             return Response(
-                    {'error': 'Нельзя подписаться на самого себя.'},
-                    status=status.HTTP_400_BAD_REQUEST
-                )
+                {'error': 'Нельзя подписаться на самого себя.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
         if request.method == 'POST':
             _, created = Subscription.objects.get_or_create(
