@@ -38,8 +38,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework.authtoken',
+    'djoser',
+    'django_filters',
     'api.apps.ApiConfig',
-    'core.apps.CoreConfig',
     'recipes.apps.RecipesConfig',
     'users.apps.UsersConfig',
 ]
@@ -132,7 +134,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 # Other settings
-# AUTH_USER_MODEL = 'users.User'
+AUTH_USER_MODEL = 'users.CustomUser'
 
 
 # Путь и имя csv файла ингредиентов для загрузки с помощью команды управления
@@ -140,12 +142,35 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # В одной строке один ингредиент и его мера измерения разделённые запятой.
 INGREDIENTS_CSV = BASE_DIR / '../data/ingredients.csv'
 
+# Путь и имя csv файла тегов для загрузки с помощью команды управления
+# python manage.py load_tags
+# В одной строке один тег, его цвет и его слаг разделённые запятой.
+TAGS_CSV = BASE_DIR / '../data/tags.csv'
+
+
+RECIPES_UPLOAD_TO = 'recipes/'
+
 
 # Django REST framework settings
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticatedOrReadOnly',
     ],
-    'DEFAULT_PAGINATION_CLASS': 'core.pagination.PageLimitPagination',
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'api.pagination.PageLimitPagination',
     'PAGE_SIZE': 6,
+}
+
+DJOSER = {
+    'SERIALIZERS': {
+        'user': 'api.serializers.UserSerializer',
+        'current_user': 'api.serializers.UserSerializer',
+    },
+    'PERMISSIONS': {
+        'user': ['rest_framework.permissions.AllowAny'],
+        'user_list': ['rest_framework.permissions.AllowAny'],
+    },
+    'HIDE_USERS': False,
 }
