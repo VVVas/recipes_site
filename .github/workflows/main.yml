@@ -117,7 +117,7 @@ jobs:
       with:
         to: ${{ secrets.TELEGRAM_TO }}
         token: ${{ secrets.TELEGRAM_TOKEN }}
-        message: Образы бэка, фронта и гейта Фудграма успешно отправлены на DockerHub после коммита ${{ github.sha }} разработчика ${{ github.actor }}
+        message: Образы бэка, фронта и гейта Фудграма успешно отправлены на DockerHub. Разработчик ${{ github.actor }}. Коммит ${{ github.sha }}
 
   deploy:
     name: Deploy
@@ -172,5 +172,5 @@ jobs:
       with:
         to: ${{ secrets.TELEGRAM_TO }}
         token: ${{ secrets.TELEGRAM_TOKEN }}
-        message: Деплой Фудграма успешно выполнен после коммита ${{ github.sha }} разработчика ${{ github.actor }}
+        message: Деплой Фудграма успешно выполнен. Разработчик ${{ github.actor }}. Коммит ${{ github.sha }}
 
