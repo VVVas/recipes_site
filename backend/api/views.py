@@ -262,6 +262,9 @@ class RecipeViewSet(ModelViewSet):
                 f'{ingredient["amount"]}\n'
             )
 
-        response = HttpResponse(cart, content_type='text/plain')
-        response['Content-Disposition'] = 'attachment; filename=cart.txt'
-        return response
+        return HttpResponse(
+            cart, headers={
+                'Content-Type': 'text/plain',
+                'Content-Disposition': 'attachment; filename="cart.txt"',
+            }
+        )
