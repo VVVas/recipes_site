@@ -135,6 +135,6 @@ dmypy.json
 .vscode
 
 # Django migrations
-*[0000-9999]_*.py
+# *[0000-9999]_*.py
 
 practicum check-list.md
