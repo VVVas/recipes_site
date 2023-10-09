@@ -1,3 +1,4 @@
+# flake8: noqa
 """
 Django settings for foodgram_backend project.
 
@@ -10,6 +11,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -20,12 +22,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-x+irtdgm*mfsol6ylwsejr1ko1!of$58tlwrn+$wi$95@o^791'
+SECRET_KEY = os.getenv('SECRET_KEY', 'django')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '158.160.79.25',
+    '127.0.0.1',
+    'localhost',
+    'fg.yp.vvvas.ru',
+]
 
 
 # Application definition
@@ -80,10 +87,21 @@ WSGI_APPLICATION = 'foodgram_backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('POSTGRES_DB', 'django'),
+        'USER': os.getenv('POSTGRES_USER', 'django'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD', ''),
+        'HOST': os.getenv('DB_HOST', ''),
+        'PORT': os.getenv('DB_PORT', 5432)
     }
 }
 
@@ -124,8 +142,24 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = '/bstatic/'
+STATIC_ROOT = '/app/static/bstatic/'
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = '/app/media/'
+
+RECIPES_UPLOAD_TO =  'recipes/'
+
+
+# Путь и имя csv файла ингредиентов для загрузки с помощью команды управления
+# python manage.py load_ingredients
+# В одной строке один ингредиент и его мера измерения разделённые запятой.
+INGREDIENTS_CSV = BASE_DIR / 'data/ingredients.csv'
+
+# Путь и имя csv файла тегов для загрузки с помощью команды управления
+# python manage.py load_tags
+# В одной строке один тег, его цвет и его слаг разделённые запятой.
+TAGS_CSV = BASE_DIR / 'data/tags.csv'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -135,20 +169,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Other settings
 AUTH_USER_MODEL = 'users.CustomUser'
-
-
-# Путь и имя csv файла ингредиентов для загрузки с помощью команды управления
-# python manage.py load_ingredients
-# В одной строке один ингредиент и его мера измерения разделённые запятой.
-INGREDIENTS_CSV = BASE_DIR / '../data/ingredients.csv'
-
-# Путь и имя csv файла тегов для загрузки с помощью команды управления
-# python manage.py load_tags
-# В одной строке один тег, его цвет и его слаг разделённые запятой.
-TAGS_CSV = BASE_DIR / '../data/tags.csv'
-
-
-RECIPES_UPLOAD_TO = 'recipes/'
 
 
 # Django REST framework settings
