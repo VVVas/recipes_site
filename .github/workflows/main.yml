@@ -127,7 +127,6 @@ jobs:
       - build_backend_and_push_to_docker_hub
       - build_frontend_and_push_to_docker_hub
       - build_gateway_and_push_to_docker_hub
-      - send_message_after_push_to_docker_hub
 
     steps:
     - name: Check out the repo
