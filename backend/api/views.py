@@ -235,11 +235,11 @@ class RecipeViewSet(ModelViewSet):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(
-        methods=['get',],
+        methods=['get', ],
         detail=False,
         url_path='download_shopping_cart',
         url_name='download_shopping_cart',
-        permission_classes=[IsAuthenticated,]
+        permission_classes=[IsAuthenticated, ]
     )
     def get_download_shopping_cart(self, request):
         """Скачивание списка покупок."""
