@@ -9,7 +9,6 @@ services:
   db:
     image: postgres:13.10
     env_file: .env
-    restart: always
     volumes:
       - pg_data:/var/lib/postgresql/data
 
@@ -18,7 +17,6 @@ services:
       - db
     build: ../backend/
     env_file: .env
-    restart: always
     volumes:
       - static:/app/static
       - media:/app/media
@@ -35,7 +33,6 @@ services:
     build: ../infra
     ports:
       - 9500:80
-    restart: always
     volumes:
       - static:/app/static
       - media:/app/media
