@@ -168,7 +168,7 @@ jobs:
           # Загрузка 4 базовых тегов при необходимости.
           # sudo docker compose -f docker-compose.production.yml exec backend python manage.py load_tags
           docker compose -f docker-compose.production.yml exec backend mkdir static/api/
-          docker compose exec backend cp -r docs/. static/api/docs/
+          docker compose -f docker-compose.production.yml exec backend cp -r docs/. static/api/docs/
 
   send_message_after_deploy:
     name: Message after deploy
