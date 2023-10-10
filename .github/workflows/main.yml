@@ -159,8 +159,6 @@ jobs:
           # sudo docker compose -f docker-compose.production.yml exec backend python manage.py load_tags
           sudo docker compose -f docker-compose.production.yml exec backend python manage.py collectstatic --no-input
           sudo docker compose -f docker-compose.production.yml exec backend cp -r docs /app/static/api/docs/
-          # Очистка от старых образов докера (когда их много иногда почему-то используются они вместо нужных).
-          sudo docker image rm $(sudo docker image ls -f "dangling=true" -q)
 
   send_message_after_deploy:
     name: Message after deploy
