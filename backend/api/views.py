@@ -40,22 +40,22 @@ class CustomUserViewSet(UserViewSet):
     queryset = User.objects.all()
 
     @action(
-        methods=['get',],
+        methods=['get', ],
         detail=False,
         url_path='me',
         url_name='me',
-        permission_classes=[IsAuthenticated,]
+        permission_classes=[IsAuthenticated, ]
     )
     def me(self, request, *args, **kwargs):
         """Переопределение для ограничения доступа гостей."""
         return super().me(request, *args, **kwargs)
 
     @action(
-        methods=['post', 'delete',],
+        methods=['post', 'delete', ],
         detail=True,
         url_path='subscribe',
         url_name='subscribe',
-        permission_classes=[IsAuthenticated,]
+        permission_classes=[IsAuthenticated, ]
     )
     def get_subscribe(self, request, id):
         """Подписка на пользователей."""
@@ -95,7 +95,7 @@ class SubscriptionViewSet(ListModelMixin, GenericViewSet):
     """Вьюсет списка подписки на авторов."""
 
     serializer_class = SubscriptionSerializer
-    permission_classes = [IsAuthenticated,]
+    permission_classes = [IsAuthenticated, ]
 
     def get_queryset(self):
         """Собираем список подписки на авторов."""
@@ -147,11 +147,11 @@ class RecipeViewSet(ModelViewSet):
         serializer.save()
 
     @action(
-        methods=['post', 'delete',],
+        methods=['post', 'delete', ],
         detail=True,
         url_path='favorite',
         url_name='favorite',
-        permission_classes=[IsAuthenticated,]
+        permission_classes=[IsAuthenticated, ]
     )
     def get_favorite(self, request, pk):
         """Добавление рецептов в избранное."""
@@ -191,11 +191,11 @@ class RecipeViewSet(ModelViewSet):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(
-        methods=['post', 'delete',],
+        methods=['post', 'delete', ],
         detail=True,
         url_path='shopping_cart',
         url_name='shopping_cart',
-        permission_classes=[IsAuthenticated,]
+        permission_classes=[IsAuthenticated, ]
     )
     def get_shopping_cart(self, request, pk):
         """Добавление рецептов в список покупок."""
