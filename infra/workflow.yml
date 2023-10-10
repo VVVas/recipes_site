@@ -140,7 +140,7 @@ jobs:
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
         source: "infra/docker-compose.production.yml"
         target: "foodgram"
-    - name: Executing remote ssh commands to deploy
+    - name: Executing remote ssh commands to deploy 1st
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.HOST }}
@@ -153,11 +153,22 @@ jobs:
           sudo docker compose -f docker-compose.production.yml down
           sudo docker compose -f docker-compose.production.yml up -d
           sudo docker compose -f docker-compose.production.yml exec backend python manage.py migrate
+          sudo docker compose -f docker-compose.production.yml exec backend python manage.py collectstatic --no-input
           # Загрузка обязательного списка ингредиентов.
           sudo docker compose -f docker-compose.production.yml exec backend python manage.py load_ingredients
+    - name: Executing remote ssh commands to deploy 2st
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USER }}
+        key: ${{ secrets.SSH_KEY }}
+        passphrase: ${{ secrets.SSH_PASSPHRASE }}
+        script: |
+          cd foodgram
           # Загрузка 4 базовых тегов при необходимости.
           # sudo docker compose -f docker-compose.production.yml exec backend python manage.py load_tags
-          sudo docker compose -f docker-compose.production.yml exec backend python manage.py collectstatic --no-input
+          docker compose -f docker-compose.production.yml exec backend mkdir static/api/
+          docker compose exec backend cp -r docs/. static/api/docs/
 
   send_message_after_deploy:
     name: Message after deploy
@@ -171,4 +182,3 @@ jobs:
         to: ${{ secrets.TELEGRAM_TO }}
         token: ${{ secrets.TELEGRAM_TOKEN }}
         message: Деплой Фудграма успешно выполнен. Разработчик ${{ github.actor }}. Коммит ${{ github.sha }}
-
