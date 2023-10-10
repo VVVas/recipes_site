@@ -1,1 +1,14 @@
-# praktikum_new_diplom
+# Продуктовый помощник.
+
+Пользователь на GitHub — vvvas
+Пользователь на Docker — vvvas
+
+Копия workflow для GitHub Actions лежит в /infra
+
+https://fg.yp.vvvas.ru/
+
+Пользователь — v@vvvas.ru
+Пароль — Qwe123!@#
+
+Администратор — a@vvvas.ru
+Пароль —Qwe123!@#
