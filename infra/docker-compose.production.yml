@@ -9,6 +9,7 @@ services:
   db:
     image: postgres:13.10
     env_file: .env
+    restart: always
     volumes:
       - pg_data:/var/lib/postgresql/data
   backend:
@@ -16,6 +17,7 @@ services:
       - db
     image: vvvas/foodgram_backend
     env_file: .env
+    restart: always
     volumes:
       - static:/app/static
       - media:/app/media
@@ -30,6 +32,7 @@ services:
     image: vvvas/foodgram_gateway
     ports:
       - 9500:80
+    restart: always
     volumes:
       - static:/app/static
       - media:/app/media
