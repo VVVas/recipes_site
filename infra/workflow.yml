@@ -119,8 +119,8 @@ jobs:
         token: ${{ secrets.TELEGRAM_TOKEN }}
         message: Образы бэка, фронта и гейта Фудграма успешно отправлены на DockerHub. Разработчик ${{ github.actor }}. Коммит ${{ github.sha }}
 
-  deploy_1st:
-    name: Deploy 1st
+  deploy:
+    name: Deploy
     if: github.ref_name == 'master'
     runs-on: ubuntu-latest
     needs: 
@@ -140,7 +140,7 @@ jobs:
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
         source: "infra/docker-compose.production.yml"
         target: "foodgram"
-    - name: Executing remote ssh commands to deploy 1st
+    - name: Executing remote ssh commands to deploy
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.HOST }}
@@ -154,36 +154,15 @@ jobs:
           sudo docker compose -f docker-compose.production.yml up -d
           sudo docker compose -f docker-compose.production.yml exec backend python manage.py migrate
           sudo docker compose -f docker-compose.production.yml exec backend python manage.py collectstatic --no-input
-          # Загрузка обязательного списка ингредиентов.
           sudo docker compose -f docker-compose.production.yml exec backend python manage.py load_ingredients
-
-  deploy_2nd:
-    name: Deploy 2nd
-    if: github.ref_name == 'master'
-    runs-on: ubuntu-latest
-    needs: deploy_1st
-
-    steps:
-    - name: Check out the repo
-      uses: actions/checkout@v3
-    - name: Executing remote ssh commands to deploy 2st
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USER }}
-        key: ${{ secrets.SSH_KEY }}
-        passphrase: ${{ secrets.SSH_PASSPHRASE }}
-        script: |
-          cd foodgram
-          # Загрузка 4 базовых тегов при необходимости.
-          # sudo docker compose -f docker-compose.production.yml exec backend python manage.py load_tags
-          docker compose -f docker-compose.production.yml exec backend mkdir static/api/
-          docker compose -f docker-compose.production.yml exec backend cp -r docs/. static/api/docs/
+          sudo docker compose -f docker-compose.production.yml exec backend python manage.py load_tags
+          sudo docker compose -f docker-compose.production.yml exec backend mkdir static/api/
+          sudo docker compose -f docker-compose.production.yml exec backend cp -r docs/. static/api/docs/
 
   send_message_after_deploy:
     name: Message after deploy
     runs-on: ubuntu-latest
-    needs: deploy_2nd
+    needs: deploy
 
     steps:
     - name: Send message
