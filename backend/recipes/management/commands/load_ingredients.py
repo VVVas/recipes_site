@@ -6,6 +6,7 @@
 """
 import csv
 
+from django.db import transaction
 from django.conf import settings
 from django.core.management import BaseCommand
 
@@ -15,6 +16,7 @@ from ...models import Ingredient
 class Command(BaseCommand):
     """Класс команды управления Джанго."""
 
+    @transaction.atomic
     def handle(self, *args, **options):
         """Код команды управления Джанго."""
         with open(settings.INGREDIENTS_CSV, encoding='utf-8') as file:

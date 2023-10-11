@@ -1,6 +1,7 @@
 """Сериалайзеры приложения API."""
 from base64 import b64decode
 
+from django.db import transaction
 from django.contrib.auth import get_user_model
 from django.core.files.base import ContentFile
 from rest_framework import serializers
@@ -194,17 +195,6 @@ class RecipeCUSerializer(serializers.ModelSerializer):
             'tags', 'ingredients', 'image', 'name', 'text', 'cooking_time',
         )
 
-    def _create_ingredientamount(self, ingredients, recipe):
-        """Создание количества ингредиентов в рецепте."""
-        for ingredientamount in ingredients:
-            ingredient = ingredientamount.get('id')
-            amount = ingredientamount.get('amount')
-            IngredientAmount.objects.create(
-                ingredient=ingredient,
-                recipe=recipe,
-                amount=amount
-            )
-
     def validate_tags(self, tags):
         """Проверка поля тегов."""
         if len(tags) != len(set(tags)):
@@ -228,6 +218,22 @@ class RecipeCUSerializer(serializers.ModelSerializer):
             )
         return data
 
+    def _create_ingredientamount(self, ingredients, recipe):
+        """Создание количества ингредиентов в рецепте."""
+        ingredientamounts = []
+        for ingredientamount in ingredients:
+            ingredient = ingredientamount.get('id')
+            amount = ingredientamount.get('amount')
+            ingredientamounts.append(
+                IngredientAmount(
+                    ingredient=ingredient,
+                    recipe=recipe,
+                    amount=amount
+                )
+            )
+        IngredientAmount.objects.bulk_create(ingredientamounts)
+
+    @transaction.atomic
     def create(self, validated_data):
         """Переопределение создания рецепта."""
         tags = validated_data.pop('tags')
@@ -237,6 +243,7 @@ class RecipeCUSerializer(serializers.ModelSerializer):
         self._create_ingredientamount(ingredients, recipe)
         return recipe
 
+    @transaction.atomic
     def update(self, recipe, validated_data):
         """Переопределение обновления рецепта."""
         tags = validated_data.get('tags', recipe.tags)

@@ -1,7 +1,8 @@
 """Модели приложения Рецепты."""
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.core.validators import MinValueValidator, RegexValidator
+from django.core.validators import (MaxValueValidator, MinValueValidator,
+                                    RegexValidator)
 from django.db import models
 
 User = get_user_model()
@@ -113,6 +114,7 @@ class Recipe(models.Model):
         verbose_name='Время приготовления (в минутах)',
         validators=[
             MinValueValidator(1, 'Минимальное время 1 минута'),
+            MaxValueValidator(900, 'Максимальное время 900 минут'),
         ],
     )
 
@@ -147,6 +149,7 @@ class IngredientAmount(models.Model):
         verbose_name='Количество',
         validators=[
             MinValueValidator(1, 'Минимум 1'),
+            MaxValueValidator(2500, 'Максимум 2500'),
         ],
     )
 
