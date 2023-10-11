@@ -6,7 +6,7 @@
 Пользователь на Docker — vvvas
 
 
-Копия workflow для GitHub Actions лежит в папке /infra.
+Копия workflow для GitHub Actions лежит в папке /infra
 
 
 https://fg.yp.vvvas.ru/
