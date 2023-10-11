@@ -263,6 +263,7 @@ class RecipeCUSerializer(serializers.ModelSerializer):
         recipe.cooking_time = validated_data.get(
             'cooking_time', recipe.cooking_time)
 
+        recipe.save()
         return recipe
 
     def to_representation(self, recipe):
